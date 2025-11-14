@@ -1,0 +1,21 @@
+{
+  "name": "hawkeye-backend",
+  "version": "1.0.0",
+  "description": "Backend server for Hawkeye application",
+  "main": "auth/server.js",
+  "scripts": {
+    "start": "node auth/server.js",
+    "dev": "node auth/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.0",
+    "express": "^4.21.1",
+    "firebase-admin": "^13.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+
