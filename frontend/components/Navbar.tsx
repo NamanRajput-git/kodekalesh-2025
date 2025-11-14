@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import LoginDialog from "./login/LoginDialog";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   return (
     <nav className="bg-white shadow-sm py-4">
@@ -75,17 +77,22 @@ export default function Navbar() {
                 </Link>
               </li>
               <li>
-                <Link
+                <button
                   className="inline-block px-4 py-2 bg-[#6f42c1] text-white rounded-md hover:bg-[#5a32a3] transition-colors font-medium"
-                  href="/dashboard"
+                  onClick={() => {
+                    setIsLoginOpen(true);
+                    setIsMenuOpen(false);
+                  }}
+                  type="button"
                 >
-                  Get Started
-                </Link>
+                  Sign In
+                </button>
               </li>
             </ul>
           </div>
         </div>
       </div>
+      <LoginDialog open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </nav>
   );
 }
