@@ -111,9 +111,12 @@ export default function AlertsTable({ alerts }: AlertsTableProps) {
                   {formatDate(alert.timestamp)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <button className="px-3 py-1.5 text-sm border border-[#6f42c1] text-[#6f42c1] rounded-md hover:bg-[#6f42c1] hover:text-white transition-colors">
+                  <Link
+                    href={`/fraud/${alert.id}`}
+                    className="px-3 py-1.5 text-sm border border-[#6f42c1] text-[#6f42c1] rounded-md hover:bg-[#6f42c1] hover:text-white transition-colors inline-block"
+                  >
                     View
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}

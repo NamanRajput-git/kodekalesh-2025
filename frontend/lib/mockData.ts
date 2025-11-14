@@ -250,3 +250,351 @@ export const activityFeed = [
   },
 ];
 
+export interface FraudDetail {
+  id: string;
+  problem: {
+    title: string;
+    description: string;
+    indicators: string[];
+    impact: string;
+    severity: "low" | "medium" | "high" | "critical";
+  };
+  solutions: {
+    immediate: {
+      title: string;
+      actions: Array<{
+        step: string;
+        description: string;
+        priority: "high" | "medium" | "low";
+      }>;
+    };
+    preventive: {
+      title: string;
+      recommendations: Array<{
+        category: string;
+        items: string[];
+      }>;
+    };
+    longTerm: {
+      title: string;
+      strategies: Array<{
+        strategy: string;
+        description: string;
+        timeline: string;
+      }>;
+    };
+  };
+  transactionDetails: {
+    merchant: string;
+    category: string;
+    location: string;
+    device: string;
+    ipAddress: string;
+    paymentMethod: string;
+  };
+}
+
+export const fraudDetails: Record<string, FraudDetail> = {
+  "1": {
+    id: "1",
+    problem: {
+      title: "Unusual Transaction Pattern - Velocity Attack",
+      description:
+        "Detected multiple high-value transactions (₹45,000 each) within a 15-minute window from the same account. This pattern indicates a potential velocity attack where fraudsters attempt to drain funds quickly before detection.",
+      indicators: [
+        "5 transactions totaling ₹225,000 in 15 minutes",
+        "Transactions exceed normal spending pattern by 800%",
+        "All transactions to same merchant category",
+        "No prior transaction history with these merchants",
+        "Transactions initiated from new device",
+      ],
+      impact:
+        "High financial risk with potential loss of ₹225,000. Immediate action required to prevent further unauthorized transactions.",
+      severity: "high",
+    },
+    solutions: {
+      immediate: {
+        title: "Immediate Actions",
+        actions: [
+          {
+            step: "1. Freeze Account",
+            description:
+              "Immediately freeze the affected account to prevent further unauthorized transactions. Notify the account holder via SMS and email.",
+            priority: "high",
+          },
+          {
+            step: "2. Block Merchant",
+            description:
+              "Temporarily block all transactions to the merchant 'Tech Solutions Inc' until verification is complete.",
+            priority: "high",
+          },
+          {
+            step: "3. Contact Customer",
+            description:
+              "Reach out to the customer via phone within 15 minutes to verify transaction legitimacy. Document the conversation.",
+            priority: "high",
+          },
+          {
+            step: "4. Review Recent Transactions",
+            description:
+              "Audit all transactions from the last 24 hours to identify any additional suspicious activity patterns.",
+            priority: "medium",
+          },
+        ],
+      },
+      preventive: {
+        title: "Preventive Measures",
+        recommendations: [
+          {
+            category: "Transaction Limits",
+            items: [
+              "Implement velocity limits: Max ₹50,000 per hour per account",
+              "Set daily transaction limit of ₹200,000",
+              "Require additional authentication for transactions > ₹25,000",
+            ],
+          },
+          {
+            category: "Monitoring Rules",
+            items: [
+              "Enable real-time alerts for 3+ transactions in 30 minutes",
+              "Flag transactions from new devices automatically",
+              "Monitor merchant category patterns for anomalies",
+            ],
+          },
+          {
+            category: "Authentication",
+            items: [
+              "Require 2FA for high-value transactions",
+              "Implement device fingerprinting",
+              "Add biometric verification for amounts > ₹30,000",
+            ],
+          },
+        ],
+      },
+      longTerm: {
+        title: "Long-term Strategies",
+        strategies: [
+          {
+            strategy: "Machine Learning Enhancement",
+            description:
+              "Train ML models on velocity attack patterns to improve detection accuracy and reduce false positives.",
+            timeline: "3-4 months",
+          },
+          {
+            strategy: "Behavioral Analytics",
+            description:
+              "Implement user behavior profiling to establish baseline spending patterns and detect deviations more effectively.",
+            timeline: "6 months",
+          },
+          {
+            strategy: "Real-time Risk Engine",
+            description:
+              "Deploy advanced risk scoring engine that evaluates multiple factors simultaneously for faster decision-making.",
+            timeline: "4-5 months",
+          },
+        ],
+      },
+    },
+    transactionDetails: {
+      merchant: "Tech Solutions Inc",
+      category: "Electronics",
+      location: "Mumbai, Maharashtra",
+      device: "iPhone 14 Pro (New Device)",
+      ipAddress: "103.45.67.89",
+      paymentMethod: "Credit Card ending in 4532",
+    },
+  },
+  "2": {
+    id: "2",
+    problem: {
+      title: "Geographic Location Mismatch",
+      description:
+        "Transaction detected from an unusual geographic location. The account holder's registered location is Delhi, but the transaction originated from Mumbai with no prior travel history or location change notification.",
+      indicators: [
+        "Transaction from Mumbai (1,400 km from registered location)",
+        "No prior transactions from this location",
+        "IP address geolocation mismatch",
+        "Transaction within 2 hours of last Delhi transaction",
+        "New device and browser fingerprint",
+      ],
+      impact:
+        "Medium risk of account takeover or card-not-present fraud. Potential loss of ₹12,000 if unauthorized.",
+      severity: "medium",
+    },
+    solutions: {
+      immediate: {
+        title: "Immediate Actions",
+        actions: [
+          {
+            step: "1. Verify Location",
+            description:
+              "Send SMS with location verification code. If customer confirms travel, update location preferences.",
+            priority: "high",
+          },
+          {
+            step: "2. Require Additional Authentication",
+            description:
+              "Request OTP verification before processing the transaction. If OTP fails, block the transaction.",
+            priority: "high",
+          },
+          {
+            step: "3. Review Account Activity",
+            description:
+              "Check for any other transactions from new locations in the past 48 hours.",
+            priority: "medium",
+          },
+        ],
+      },
+      preventive: {
+        title: "Preventive Measures",
+        recommendations: [
+          {
+            category: "Location Monitoring",
+            items: [
+              "Implement geofencing alerts for transactions >500km from home location",
+              "Require location verification for first transaction from new city",
+              "Allow customers to pre-register travel locations",
+            ],
+          },
+          {
+            category: "Device Management",
+            items: [
+              "Track and verify new device logins",
+              "Send notification emails for new device access",
+              "Maintain device whitelist for trusted devices",
+            ],
+          },
+        ],
+      },
+      longTerm: {
+        title: "Long-term Strategies",
+        strategies: [
+          {
+            strategy: "Advanced Geolocation",
+            description:
+              "Integrate with GPS and mobile network data for more accurate location verification.",
+            timeline: "5-6 months",
+          },
+          {
+            strategy: "Travel Pattern Learning",
+            description:
+              "Build ML model to learn customer travel patterns and reduce false positives for legitimate travel.",
+            timeline: "6 months",
+          },
+        ],
+      },
+    },
+    transactionDetails: {
+      merchant: "Global Retail",
+      category: "Shopping",
+      location: "Mumbai, Maharashtra",
+      device: "Samsung Galaxy S23 (New Device)",
+      ipAddress: "182.65.123.45",
+      paymentMethod: "Debit Card ending in 7890",
+    },
+  },
+  "4": {
+    id: "4",
+    problem: {
+      title: "Excessive Amount Threshold Violation",
+      description:
+        "Transaction amount of ₹156,000 exceeds the customer's normal transaction threshold by 500%. The account typically processes transactions averaging ₹3,000-₹5,000, making this transaction highly anomalous.",
+      indicators: [
+        "Transaction amount: ₹156,000 (500% above average)",
+        "No prior transactions > ₹50,000 in account history",
+        "Transaction to luxury merchant category",
+        "Initiated during non-business hours (2:20 AM)",
+        "Single transaction exceeds monthly average spending",
+      ],
+      impact:
+        "Critical financial risk. If fraudulent, represents significant loss. Immediate intervention required.",
+      severity: "critical",
+    },
+    solutions: {
+      immediate: {
+        title: "Immediate Actions",
+        actions: [
+          {
+            step: "1. Hold Transaction",
+            description:
+              "Immediately place transaction on hold. Do not process until customer verification is complete.",
+            priority: "high",
+          },
+          {
+            step: "2. Contact Customer Urgently",
+            description:
+              "Call customer immediately (within 5 minutes) at registered phone number. If no response, escalate to fraud team.",
+            priority: "high",
+          },
+          {
+            step: "3. Verify Transaction Details",
+            description:
+              "Confirm merchant name, amount, and transaction purpose directly with customer before processing.",
+            priority: "high",
+          },
+          {
+            step: "4. Review Account Security",
+            description:
+              "Check for any signs of account compromise, password changes, or suspicious login activity.",
+            priority: "high",
+          },
+        ],
+      },
+      preventive: {
+        title: "Preventive Measures",
+        recommendations: [
+          {
+            category: "Amount Limits",
+            items: [
+              "Set dynamic spending limits based on customer history",
+              "Require manager approval for transactions >100% of average",
+              "Implement graduated authentication for high-value transactions",
+            ],
+          },
+          {
+            category: "Time-based Rules",
+            items: [
+              "Flag transactions during unusual hours (11 PM - 6 AM)",
+              "Require additional verification for off-hours high-value transactions",
+              "Send immediate SMS alerts for transactions > ₹100,000",
+            ],
+          },
+          {
+            category: "Merchant Category Monitoring",
+            items: [
+              "Monitor transactions to luxury/high-value merchant categories",
+              "Require pre-authorization for first-time luxury purchases",
+              "Implement category-based spending limits",
+            ],
+          },
+        ],
+      },
+      longTerm: {
+        title: "Long-term Strategies",
+        strategies: [
+          {
+            strategy: "Adaptive Spending Limits",
+            description:
+              "Develop ML model that learns individual spending patterns and dynamically adjusts limits based on behavior.",
+            timeline: "4-5 months",
+          },
+          {
+            strategy: "Predictive Risk Scoring",
+            description:
+              "Build predictive models that assess transaction risk before processing, considering amount, time, location, and merchant.",
+            timeline: "6 months",
+          },
+        ],
+      },
+    },
+    transactionDetails: {
+      merchant: "Luxury Brands",
+      category: "Luxury",
+      location: "Delhi, NCR",
+      device: "MacBook Pro (Trusted Device)",
+      ipAddress: "192.168.1.45",
+      paymentMethod: "Credit Card ending in 1234",
+    },
+  },
+};
+
