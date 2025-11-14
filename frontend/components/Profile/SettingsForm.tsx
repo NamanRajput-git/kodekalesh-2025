@@ -1,21 +1,60 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 
-export default function SettingsForm() {
+type SettingsFormProps = {
+  email: string;
+  phone?: string;
+  organization?: string;
+  loading?: boolean;
+  isSaving?: boolean;
+  disabled?: boolean;
+  statusMessage?: {
+    type: "success" | "error";
+    text: string;
+  } | null;
+  onSave?: (payload: {
+    email: string;
+    phone: string;
+    organization: string;
+  }) => Promise<void> | void;
+};
+
+const defaultNotifications = {
+  email: true,
+  sms: false,
+  push: true,
+};
+
+export default function SettingsForm({
+  email,
+  phone = "",
+  organization = "",
+  loading = false,
+  isSaving = false,
+  disabled = false,
+  statusMessage = null,
+  onSave,
+}: SettingsFormProps) {
   const [formData, setFormData] = useState({
-    email: "rajesh.kumar@example.com",
-    phone: "+91 98765 43210",
-    organization: "Financial Services Corp",
-    notifications: {
-      email: true,
-      sms: false,
-      push: true,
-    },
+    email,
+    phone,
+    organization,
+    notifications: { ...defaultNotifications },
     twoFactor: false,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      email,
+      phone,
+      organization,
+    }));
+  }, [email, phone, organization]);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
       if (name.startsWith("notification.")) {
@@ -41,10 +80,17 @@ export default function SettingsForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    alert("Settings saved successfully!");
+    if (!onSave) return;
+    await onSave({
+      email: formData.email,
+      phone: formData.phone,
+      organization: formData.organization,
+    });
   };
+
+  const isFormDisabled = disabled || loading;
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -64,6 +110,8 @@ export default function SettingsForm() {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              disabled
+              readOnly
             />
           </div>
           <div className="mb-4">
@@ -77,6 +125,7 @@ export default function SettingsForm() {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
+              disabled={isFormDisabled}
             />
           </div>
           <div className="mb-6">
@@ -93,6 +142,7 @@ export default function SettingsForm() {
               name="organization"
               value={formData.organization}
               onChange={handleChange}
+              disabled={isFormDisabled}
             />
           </div>
           <hr className="border-gray-200 my-6" />
@@ -106,6 +156,7 @@ export default function SettingsForm() {
                 name="notification.email"
                 checked={formData.notifications.email}
                 onChange={handleChange}
+                disabled={isFormDisabled}
               />
               <span className="ml-3 text-gray-700">Email Notifications</span>
             </label>
@@ -119,6 +170,7 @@ export default function SettingsForm() {
                 name="notification.sms"
                 checked={formData.notifications.sms}
                 onChange={handleChange}
+                disabled={isFormDisabled}
               />
               <span className="ml-3 text-gray-700">SMS Notifications</span>
             </label>
@@ -132,6 +184,7 @@ export default function SettingsForm() {
                 name="notification.push"
                 checked={formData.notifications.push}
                 onChange={handleChange}
+                disabled={isFormDisabled}
               />
               <span className="ml-3 text-gray-700">Push Notifications</span>
             </label>
@@ -147,6 +200,7 @@ export default function SettingsForm() {
                 name="twoFactor"
                 checked={formData.twoFactor}
                 onChange={handleChange}
+                disabled={isFormDisabled}
               />
               <span className="ml-3 text-gray-700">Enable Two-Factor Authentication</span>
             </label>
@@ -154,17 +208,36 @@ export default function SettingsForm() {
           <div className="flex gap-3">
             <button
               type="submit"
-              className="px-6 py-2 bg-[#6f42c1] text-white rounded-lg hover:bg-[#5a32a3] transition-colors font-semibold"
+              className="px-6 py-2 bg-[#6f42c1] text-white rounded-lg hover:bg-[#5a32a3] transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isFormDisabled || isSaving}
             >
-              Save Changes
+              {isSaving ? "Saving..." : "Save Changes"}
             </button>
             <button
               type="button"
               className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-semibold"
+              disabled={isFormDisabled || isSaving}
             >
               Cancel
             </button>
           </div>
+          {statusMessage && (
+            <p
+              className={`mt-4 text-sm ${
+                statusMessage.type === "success" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {statusMessage.text}
+            </p>
+          )}
+          {!disabled && isFormDisabled && (
+            <p className="mt-3 text-sm text-gray-500">Loading profile...</p>
+          )}
+          {disabled && (
+            <p className="mt-3 text-sm text-gray-500">
+              Sign in to update your Hawkeye profile.
+            </p>
+          )}
         </form>
       </div>
     </div>

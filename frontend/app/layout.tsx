@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { HawkeyeChatbot } from "../components/Chatbot/HawkeyeChatbot";
 
 export const metadata: Metadata = {
   title: "Hawkeye - Financial Fraud Detection Platform",
@@ -15,6 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         {children}
+        <HawkeyeChatbot />
       </body>
     </html>
   );

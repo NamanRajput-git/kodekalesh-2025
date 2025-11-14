@@ -1,3 +1,5 @@
+"use client";
+
 interface MetricsCardProps {
   title: string;
   value: string | number;
